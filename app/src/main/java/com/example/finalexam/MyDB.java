@@ -41,9 +41,14 @@ public class MyDB {
         return database.insert(TODO_TABLE, null, values);
     }
 
-    public void insertTODO() {
-        createRecords(1, "Fill Gas", "09/02/2017 23:02", "false");
-        createRecords(2, "Call John", "09/02/2017 23:01", "false");
+    public static void insertTODO() {
+        Cursor c = database.rawQuery("SELECT COUNT(*) FROM todolist", null);
+        c.moveToFirst();
+        int i = c.getInt(0);
+        if (i == 0) {
+            createRecords(1, "Fill Gas", "09/02/2017 23:02", "false");
+            createRecords(2, "Call John", "09/02/2017 23:01", "false");
+        }
     }
     public static int nextId() {
         String[] cols = new String[]{TODO_ID};

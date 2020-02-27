@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
         all = false;
         rv = findViewById(R.id.recyclerView);
         mydb = new MyDB(this);
-        MyDatabaseHelper mdh = new MyDatabaseHelper(this);
-        mdh.onCreate(mydb.getDatabase());
         mydb.insertTODO();
         setAdapter();
     }
