@@ -11,7 +11,7 @@ public class MyDB {
 
     private MyDatabaseHelper dbHelper;
 
-    private SQLiteDatabase database;
+    private static SQLiteDatabase database;
 
     public final static String TODO_TABLE = "todolist"; // name of table
 
@@ -29,11 +29,9 @@ public class MyDB {
     }
 
 
-    public long createRecords(int id, String name, String date, String isComplete) {
+    public static long createRecords(int id, String name, String date, String isComplete) {
         if (id == 0) {
-            Cursor c = selectRecords(true);
-            c.moveToLast();
-            id = c.getInt(0)+1;
+            id = nextId();
         }
         ContentValues values = new ContentValues();
         values.put(TODO_ID, id);
@@ -47,16 +45,23 @@ public class MyDB {
         createRecords(1, "Fill Gas", "09/02/2017 23:02", "false");
         createRecords(2, "Call John", "09/02/2017 23:01", "false");
     }
-
-    public Cursor selectRecords(boolean b) {
+    public static int nextId() {
+        String[] cols = new String[]{TODO_ID};
+        Cursor mCursor = database.query(true, TODO_TABLE, cols, null
+                , null, null, null, "_id desc", null);
+        mCursor.moveToFirst();
+        int id = mCursor.getInt(0)+1;
+        return id;
+    }
+    public static Cursor selectRecords(boolean b) {
         String[] cols = new String[]{TODO_ID, TODO_NAME, TODO_DATE, TODO_ISCOMPLETE};
         Cursor mCursor;
         if (b) {
             mCursor = database.query(true, TODO_TABLE, cols, null
                     , null, null, null, "date asc", null);
         } else {
-            mCursor = database.query(true, TODO_TABLE, cols, "iscomplete = 'false'"
-                    , null, null, null, "date asc", null);
+            mCursor = database.query(true, TODO_TABLE, cols, "iscomplete = ?"
+                    , new String[]{"false"}, null, null, "date asc", null);
         }
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -64,16 +69,16 @@ public class MyDB {
         return mCursor; // iterate to get each value.
     }
 
-    public void deleteItem(TODO t) {
-        database.delete(TODO_TABLE, "_id = "+t.get_id(), null);
+    public static void deleteItem(int id) {
+        database.delete(TODO_TABLE, "_id = ?", new String[]{String.valueOf(id)});
     }
 
-    public long completeItem(TODO t) {
+    public static long completeItem(int id, String name, String date, String isComplete) {
         ContentValues values = new ContentValues();
-        values.put(TODO_NAME, t.getName());
-        values.put(TODO_DATE, t.getDate());
-        values.put(TODO_ISCOMPLETE, t.isComplete());
-        return database.update(TODO_ID, values, "_id = " + t.get_id(), null);
+        values.put(TODO_NAME, name);
+        values.put(TODO_DATE, date);
+        values.put(TODO_ISCOMPLETE, isComplete);
+        return database.update(TODO_TABLE, values, "_id = ?", new String[]{String.valueOf(id)});
     }
 
     public SQLiteDatabase getDatabase() {

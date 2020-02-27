@@ -31,9 +31,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public void changeSwitch(View view) {
         if (all) all = false; else all = true;
+        setAdapter();
     }
     public void addNew(View view) {
-
+        Intent i = new Intent(this,Detail.class);
+        startActivityForResult(i, 0);
     }
     public void setAdapter() {
         Cursor c = mydb.selectRecords(all);
@@ -44,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 0) {
-        }
         setAdapter();
     }
 }

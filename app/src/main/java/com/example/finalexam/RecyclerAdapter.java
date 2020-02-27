@@ -61,7 +61,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             _tv1.setText(t.getName());
             _tv2.setText(t.getDate());
             if (t.isComplete().equals("true")) _cb.setChecked(true); else _cb.setChecked(false);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

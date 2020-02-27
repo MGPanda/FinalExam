@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.Date;
 
 public class Detail extends AppCompatActivity {
     private TextView createdDate, todoDate;
@@ -16,7 +19,9 @@ public class Detail extends AppCompatActivity {
     private CheckBox todoCheck;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.bar_menu, menu);
+            if (getIntent().getExtras() == null || getIntent().getStringExtra("ISCOMPLETE").equals("false")) {
+                getMenuInflater().inflate(R.menu.bar_menu, menu);
+            }
         return true;
     }
     @Override
@@ -30,17 +35,32 @@ public class Detail extends AppCompatActivity {
         todoDate = findViewById(R.id.todoDate);
         todoName = findViewById(R.id.todoName);
         todoCheck = findViewById(R.id.todoCheck);
-        if (getIntent().getStringExtra("ISCOMPLETE").equals("true")) {
-            createdDate.setText("Completed Date");
-            todoCheck.setChecked(true);
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getStringExtra("ISCOMPLETE").equals("true")) {
+                createdDate.setText("Completed Date");
+                todoCheck.setChecked(true);
+                todoName.setEnabled(false);
+                todoCheck.setEnabled(false);
+            }
+            todoName.setText(getIntent().getStringExtra("NAME"));
+            todoDate.setText(getIntent().getStringExtra("DATE"));
         }
-        todoName.setText(getIntent().getStringExtra("NAME"));
-        todoDate.setText(getIntent().getStringExtra("DATE"));
     }
-    public void saveTODO(View view) {
+    public void saveTODO(MenuItem mi) {
+        String c = "false";
+        if (todoCheck.isChecked()) c = "true";
+        if (getIntent().getExtras() != null) {
+            MyDB.completeItem(getIntent().getIntExtra("ID",0), todoName.getText().toString(), todoDate.getText().toString(), c);
+        } else {
+            setResult(0);
+            MyDB.createRecords(0, todoName.getText().toString(), new Date().toString(), c);
+        }
         finish();
     }
-    public void deleteTODO(View view) {
+    public void deleteTODO(MenuItem mi) {
+        if (getIntent().getExtras() != null) {
+            MyDB.deleteItem(getIntent().getIntExtra("ID",0));
+        }
         finish();
     }
 }
