@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -60,7 +61,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public void bind(final TODO t) {
             _tv1.setText(t.getName());
             _tv2.setText(t.getDate());
-            if (t.isComplete().equals("true")) _cb.setChecked(true); else _cb.setChecked(false);
+            if (t.isComplete().equals("true")) {
+                _cb.setChecked(true);
+                _cb.setEnabled(false);
+            } else _cb.setChecked(false);
+            _cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    MyDB.completeItem(t.get_id(), t.getName(), t.getDate(), "true");
+                    MainActivity.getMa().setAdapter();
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

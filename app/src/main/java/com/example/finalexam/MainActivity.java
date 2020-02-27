@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private MyDB mydb;
     private RecyclerView rv;
     private boolean all;
+    private static MainActivity ma;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         assert ab != null;
         ab.setTitle("Sqlite TODO List");
+        ma = this;
         all = false;
         rv = findViewById(R.id.recyclerView);
         mydb = new MyDB(this);
@@ -43,9 +45,7 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(ra);
         rv.setLayoutManager(new LinearLayoutManager(this));
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        setAdapter();
+    public static MainActivity getMa() {
+        return ma;
     }
 }

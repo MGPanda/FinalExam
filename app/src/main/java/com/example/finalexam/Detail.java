@@ -21,6 +21,8 @@ public class Detail extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
             if (getIntent().getExtras() == null || getIntent().getStringExtra("ISCOMPLETE").equals("false")) {
                 getMenuInflater().inflate(R.menu.bar_menu, menu);
+            } else {
+                getMenuInflater().inflate(R.menu.bar_menu2, menu);
             }
         return true;
     }
@@ -55,11 +57,13 @@ public class Detail extends AppCompatActivity {
             setResult(0);
             MyDB.createRecords(0, todoName.getText().toString(), new Date().toString(), c);
         }
+        MainActivity.getMa().setAdapter();
         finish();
     }
     public void deleteTODO(MenuItem mi) {
         if (getIntent().getExtras() != null) {
             MyDB.deleteItem(getIntent().getIntExtra("ID",0));
+            MainActivity.getMa().setAdapter();
         }
         finish();
     }
