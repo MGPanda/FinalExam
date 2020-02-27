@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/miCompose"
+        android:icon="@drawable/ic_save_black_24dp"
+        app:showAsAction="ifRoom"
+        android:title="Save"
+        android:onClick="saveTODO">
+    </item>
+    <item
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_delete_forever_black_24dp"
+        app:showAsAction="ifRoom|withText"
+        android:title="Delete"
+        android:onClick="deleteTODO">
+    </item>
+</menu>

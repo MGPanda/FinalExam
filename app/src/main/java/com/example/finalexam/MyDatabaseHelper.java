@@ -11,10 +11,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
 
-    private static final String TABLE_NAME = "contacts";
+    private static final String TABLE_NAME = "todolist";
 
     // Database creation sql statement
-    private static final String DATABASE_CREATE = "create table "+TABLE_NAME+"( _id integer primary key,name text not null,surname text,number integer not null, fullname text not null);";
+    private static final String DATABASE_CREATE = "create table "+TABLE_NAME+"( _id integer primary key,name text not null,date text not null,iscomplete text not null);";
 
     public MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

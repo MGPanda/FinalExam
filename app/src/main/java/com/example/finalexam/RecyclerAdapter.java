@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,19 +17,22 @@ import java.util.ArrayList;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     private Context _c;
     private Cursor _cu;
-    private ArrayList<Content> _al;
+    private ArrayList<TODO> _al;
+
     public RecyclerAdapter(Context c, Cursor cu) {
         this._c = c;
         this._cu = cu;
+        this._al = new ArrayList<TODO>();
         do {
-            _al.add(new Content(A,B,C,D));
+            _al.add(new TODO(_cu.getInt(0), _cu.getString(1), _cu.getString(2), _cu.getString(3)));
         } while (_cu.moveToNext());
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater li = LayoutInflater.from(_c);
-        View v = li.inflate(R.layout.row, parent,false);
+        View v = li.inflate(R.layout.row, parent, false);
         return new ViewHolder(v);
     }
 
@@ -44,16 +48,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView _tv1, _tv2;
+        private CheckBox _cb;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            _tv1 = itemView.findViewById(R.id.textView);
-            _tv2 = itemView.findViewById(R.id.textView2);
+            _tv1 = itemView.findViewById(R.id.taskName);
+            _tv2 = itemView.findViewById(R.id.date);
+            _cb = itemView.findViewById(R.id.checkBox);
         }
-        public void bind(Content c) {
+
+        public void bind(final TODO t) {
+            _tv1.setText(t.getName());
+            _tv2.setText(t.getDate());
+            if (t.isComplete().equals("true")) _cb.setChecked(true); else _cb.setChecked(false);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(_c, Detail.class);
+                    i.putExtra("ID", t.get_id());
+                    i.putExtra("NAME", t.getName());
+                    i.putExtra("DATE", t.getDate());
+                    i.putExtra("ISCOMPLETE", t.isComplete());
                     _c.startActivity(i);
                 }
             });
