@@ -52,7 +52,7 @@ public class Detail extends AppCompatActivity {
         String c = "false";
         if (todoCheck.isChecked()) c = "true";
         if (getIntent().getExtras() != null) {
-            MyDB.completeItem(getIntent().getIntExtra("ID",0), todoName.getText().toString(), todoDate.getText().toString(), c);
+            MyDB.completeItem(getIntent().getIntExtra("ID",0), todoName.getText().toString(), new Date().toString(), c);
         } else {
             setResult(0);
             MyDB.createRecords(0, todoName.getText().toString(), new Date().toString(), c);
